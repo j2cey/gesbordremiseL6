@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
-use App\WorkflowAction;
-use App\WorkflowExecAction;
+use App\WorkflowExec;
+use App\WorkflowStep;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,26 +13,25 @@ class WorkflowActionNext extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $actionexec;
-    public $action;
-    public $action_url;
+    public $exec;
+    public $step;
+    public $execstep_url;
 
     /**
      * Create a new message instance.
      *
-     * @param WorkflowExecAction $actionexec
+     * @param WorkflowExec $exec
      */
-    public function __construct(WorkflowExecAction $actionexec)
+    public function __construct(WorkflowExec $exec)
     {
-        $this->actionexec = $actionexec;
+        $this->exec = $exec;
 
-        $action = $actionexec->action;
-        if (! $actionexec) {
-            $action = WorkflowAction::where('id', $actionexec->workflow_action_id)->first();
+        $this->step = $exec->currentstep;
+        if (! $this->step) {
+            $this->step = WorkflowStep::where('id', $exec->current_step_id)->first();
         }
-        $this->action = $action;
 
-        $this->action_url = route('workflowexecactions.show', $actionexec->uuid);
+        $this->execstep_url = route('workflowexecs.show', $exec->uuid);
     }
 
     /**

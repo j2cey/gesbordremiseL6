@@ -22,9 +22,9 @@ Route::get('send-mail', function () {
         'body' => 'This is for testing email using smtp'
     ];
 
-    $affectation = \App\Affectation::where('id', 2)->first();
+    $exec = \App\WorkflowExec::where('id', 1)->first();
 
-    \Mail::to('j.ngomnze@gabontelecom.ga')->send(new \App\Mail\AffectationNew($affectation));
+    \Mail::to('j.ngomnze@gabontelecom.ga')->send(new \App\Mail\WorkflowActionNext($exec));
 
     dd("Email is Sent.");
 
